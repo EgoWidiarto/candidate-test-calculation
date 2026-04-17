@@ -1,0 +1,30 @@
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  justify-content: center;
+}
+
+table {
+  border-spacing: 0.7rem;
+}
+
+#condition {
+  border-radius: 0.3rem;
+  background-color: #248da7;
+  height: 2rem;
+  width: 100%;
+  color: #fefefe;
+}
+
+table input {
+  border-radius: 0.3rem;
+  background-color: #248da7;
+  height: 1.7rem;
+  width: 70%;
+  color: #fefefe;
+  border: none;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
