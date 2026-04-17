@@ -181,6 +181,9 @@ BeamAnalysis.analyzer.twoSpanUnequal = class {
     const L2 = beam.secondarySpan;
     const w = load;
 
+    // Three Moment Equation untuk uniform load
+    // 2*Mb*(L1 + L2) = -w*L1^4/4 - w*L2^4/4
+    // Simplified: Mb = -(w/12) * (L1^3 + L2^3) / (L1 + L2)
     const M = (-(w / 12) * (Math.pow(L1, 3) + Math.pow(L2, 3))) / (L1 + L2);
 
     return M;
@@ -228,16 +231,20 @@ BeamAnalysis.analyzer.twoSpanUnequal = class {
     return function (x) {
       let M;
 
-      // Span 1
+      // Span 1 (0 <= x <= L1)
       if (x >= 0 && x <= L1) {
-        const Va = (w * L1) / 2 + Mb / L1;
-        M = Va * x - (w / 2) * x * x - Mb;
+        // Reaction at A: Ra = wL1/2 - Mb/L1
+        const Ra = (w * L1) / 2 - Mb / L1;
+        // Moment at x: M = Ra*x - (w/2)*x^2 + Mb
+        M = Ra * x - (w / 2) * x * x + Mb;
       }
-      // Span 2
+      // Span 2 (L1 < x <= L1+L2)
       else if (x > L1 && x <= L1 + L2) {
-        const Vc = (w * L2) / 2 - Mb / L2;
+        // Reaction at C: Rc = wL2/2 - Mb/L2
+        const Rc = (w * L2) / 2 - Mb / L2;
         const xPrime = x - L1;
-        M = -Vc * (L2 - xPrime) + (w / 2) * xPrime * xPrime;
+        // Moment at x: M = -Rc*(L2-xPrime) - (w/2)*xPrime^2 - Mb
+        M = -Rc * (L2 - xPrime) - (w / 2) * xPrime * xPrime - Mb;
       } else {
         M = 0;
       }
@@ -258,15 +265,20 @@ BeamAnalysis.analyzer.twoSpanUnequal = class {
     return function (x) {
       let V;
 
-      // Span 1
+      // Span 1 (0 <= x <= L1)
       if (x >= 0 && x <= L1) {
-        const Va = (w * L1) / 2 + Mb / L1;
-        V = Va - w * x;
+        // Reaction at A: Ra = wL1/2 - Mb/L1
+        const Ra = (w * L1) / 2 - Mb / L1;
+        // Shear: V = Ra - w*x
+        V = Ra - w * x;
       }
-      // Span 2
+      // Span 2 (L1 < x <= L1+L2)
       else if (x > L1 && x <= L1 + L2) {
-        const Vc = (w * L2) / 2 - Mb / L2;
-        V = -Vc + w * (x - L1);
+        // Reaction at C: Rc = wL2/2 - Mb/L2
+        const Rc = (w * L2) / 2 - Mb / L2;
+        const xPrime = x - L1;
+        // Shear: V = Rc - w*xPrime
+        V = Rc - w * xPrime;
       } else {
         V = 0;
       }
